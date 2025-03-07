@@ -1221,7 +1221,7 @@
                     // Wyświetlanie podsumowania
                     document.getElementById('summary-amount').textContent = formatNumber(amount) + ' PLN';
                     document.getElementById('summary-interest').textContent = annualInterest.toFixed(2) + '%';
-                    document.getElementById('summary-period').textContent = years + ' lat (' + months + ' miesięcy)';
+                    document.getElementById('summary-period').textContent = months + ' miesięcy';
                     document.getElementById('summary-type').textContent = rateType === 'equal' ? 'Równe (annuitetowe)' : 'Malejące';
                     document.getElementById('summary-first-installment').textContent = formatNumber(firstInstallment) + ' PLN';
                     document.getElementById('summary-total-cost').textContent = formatNumber(totalInterestWithoutExtra) + ' PLN';
@@ -1230,7 +1230,7 @@
                     // Aktualizacja kart informacyjnych
                     document.getElementById('info-installment').textContent = formatNumber(firstInstallment) + ' PLN';
                     document.getElementById('info-total-interest').textContent = formatNumber(totalInterestWithoutExtra) + ' PLN';
-                    document.getElementById('info-time').textContent = years + ' lat';
+                    document.getElementById('info-time').textContent = months + ' miesięcy';
                     
                     if (extraPayment > 0) {
                         document.getElementById('extra-payment-summary').style.display = 'block';

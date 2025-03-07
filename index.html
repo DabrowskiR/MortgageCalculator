@@ -815,7 +815,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group mb-0">
+                    <div class="form-group">
                         <label class="label" for="extraPaymentStrategy">Strategia nadpłat</label>
                         <div class="input-wrapper">
                             <select id="extraPaymentStrategy" class="select">
@@ -823,6 +823,14 @@
                                 <option value="increasing">Zwiększająca się nadpłata o różnicę w racie</option>
                             </select>
                         </div>
+                    </div>
+                    
+                    <div class="form-group mb-0" id="maxExtraPaymentContainer">
+                        <label class="label" for="maxExtraPayment">Maksymalna kwota nadpłaty (PLN)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="maxExtraPayment" class="input" min="0" step="100" value="2000">
+                        </div>
+                        <div class="error-message"></div>
                     </div>
                 </div>
 
@@ -1177,7 +1185,10 @@
                         if (extraPaymentStrategy === 'increasing' && monthCount > 1 && extraPaymentEffect === 'decreaseInstallment') {
                             // Zwiększanie nadpłaty o różnicę między pierwotną ratą a aktualną
                             const difference = initialInstallment - installment;
-                            currentExtraPayment = extraPayment + difference;
+                            const maxExtraPayment = parseFloat(document.getElementById('maxExtraPayment').value) || 2000;
+                            
+                            // Oblicz nową nadpłatę, ale nie przekraczaj maksymalnej wartości
+                            currentExtraPayment = Math.min(extraPayment + difference, maxExtraPayment);
                         } else {
                             currentExtraPayment = extraPayment;
                         }
@@ -1227,8 +1238,13 @@
                         document.getElementById('summary-extra-payment').textContent = formatNumber(extraPayment) + ' PLN';
                         document.getElementById('summary-extra-effect').textContent = 
                             extraPaymentEffect === 'shortenPeriod' ? 'Skrócenie okresu kredytowania' : 'Zmniejszenie raty';
-                        document.getElementById('summary-extra-strategy').textContent = 
-                            extraPaymentStrategy === 'fixed' ? 'Stała kwota nadpłaty' : 'Zwiększająca się nadpłata';
+                        if (extraPaymentStrategy === 'fixed') {
+                            document.getElementById('summary-extra-strategy').textContent = 'Stała kwota nadpłaty';
+                        } else {
+                            const maxExtraPayment = parseFloat(document.getElementById('maxExtraPayment').value) || 2000;
+                            document.getElementById('summary-extra-strategy').textContent = 
+                                'Zwiększająca się nadpłata (max: ' + formatNumber(maxExtraPayment) + ' PLN)';
+                        }
                         document.getElementById('summary-new-period').textContent = Math.floor(monthCount / 12) + ' lat ' + (monthCount % 12) + ' mies. (' + monthCount + ' mies.)';
                         document.getElementById('summary-interest-saved').textContent = formatNumber(totalInterestWithoutExtra - totalInterest) + ' PLN';
                         document.getElementById('summary-time-saved').textContent = (months - monthCount) + ' miesięcy';
@@ -1269,6 +1285,24 @@
             
             // Dodanie nasłuchiwania dla przycisku
             document.getElementById('calculate').addEventListener('click', calculateLoan);
+            
+            // Pokazuj/ukrywaj pole maksymalnej nadpłaty w zależności od wybranej strategii
+            const extraPaymentStrategy = document.getElementById('extraPaymentStrategy');
+            const maxExtraPaymentContainer = document.getElementById('maxExtraPaymentContainer');
+            
+            function toggleMaxExtraPaymentVisibility() {
+                if (extraPaymentStrategy.value === 'increasing') {
+                    maxExtraPaymentContainer.style.display = 'block';
+                } else {
+                    maxExtraPaymentContainer.style.display = 'none';
+                }
+            }
+            
+            // Ustaw początkową widoczność
+            toggleMaxExtraPaymentVisibility();
+            
+            // Nasłuchuj zmian w strategii nadpłat
+            extraPaymentStrategy.addEventListener('change', toggleMaxExtraPaymentVisibility);
             
             // Efekty animacji przy najechaniu na pola
             document.querySelectorAll('.input, .select').forEach(input => {

@@ -767,7 +767,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="label" for="period">Okres kredytowania (lata)</label>
+                        <label class="label" for="period">Okres kredytowania (miesiące)</label>
                         <div class="input-wrapper">
                             <input type="number" id="period" class="input" min="1" max="35" step="1" value="25">
                         </div>
@@ -1092,8 +1092,8 @@
                     isValid = false;
                 }
                 
-                if (isNaN(period) || period <= 0 || period > 35) {
-                    periodError.textContent = 'Podaj prawidłowy okres (1-35 lat)';
+                if (isNaN(period) || period <= 0 || period > 420) {
+                    periodError.textContent = 'Podaj prawidłowy okres (1-420 miesięcy)';
                     isValid = false;
                 }
                 
@@ -1111,8 +1111,7 @@
                 setTimeout(() => {
                     const amount = parseFloat(document.getElementById('amount').value);
                     const annualInterest = parseFloat(document.getElementById('interest').value);
-                    const years = parseInt(document.getElementById('period').value);
-                    const months = years * 12;
+                    const months = parseInt(document.getElementById('period').value);
                     const monthlyInterest = annualInterest / 12 / 100;
                     const rateType = document.getElementById('rateType').value;
                     const extraPayment = parseFloat(document.getElementById('extraPayment').value) || 0;

@@ -1221,7 +1221,7 @@
                     // Wyświetlanie podsumowania
                     document.getElementById('summary-amount').textContent = formatNumber(amount) + ' PLN';
                     document.getElementById('summary-interest').textContent = annualInterest.toFixed(2) + '%';
-                    document.getElementById('summary-period').textContent = months + ' miesięcy';
+                    document.getElementById('summary-period').textContent = Math.floor(months / 12) + ' lat ' + (months % 12) + ' mies. (' + months + ' mies.)';
                     document.getElementById('summary-type').textContent = rateType === 'equal' ? 'Równe (annuitetowe)' : 'Malejące';
                     document.getElementById('summary-first-installment').textContent = formatNumber(firstInstallment) + ' PLN';
                     document.getElementById('summary-total-cost').textContent = formatNumber(totalInterestWithoutExtra) + ' PLN';

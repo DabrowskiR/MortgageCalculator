@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator kredytowy 2025</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-light: #f8fafc;
+            --text-light: #1e293b;
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --text-dark: #e2e8f0;
+            --border-light: #e2e8f0;
+            --border-dark: #334155;
+            --input-bg-light: #ffffff;
+            --input-bg-dark: #1e293b;
+            --card-light: #ffffff;
+            --error: #ef4444;
+            --success: #10b981;
+            --shadow-light: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-dark: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --secondary-light: #f1f5f9;
+            --secondary-dark: #334155;
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header Styles */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .app-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--secondary-light);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-light);
+            fill: none;
+            transition: stroke 0.3s;
+        }
+
+        body.dark-mode .theme-icon {
+            stroke: var(--text-dark);
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--card-light);
+            border-radius: 16px;
+            box-shadow: var(--shadow-light);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        body.dark-mode .card {
+            background-color: var(--card-dark);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .card-title {
+            color: var(--text-dark);
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .label {
+            color: var(--text-dark);
+        }
+
+        .input-wrapper {
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            transform: translateY(-2px);
+        }
+
+        .input, .select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: var(--input-bg-light);
+            color: var(--text-light);
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+            box-sizing: border-box;
+        }
+
+        .input:focus, .select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        body.dark-mode .input, 
+        body.dark-mode .select {
+            border-color: var(--border-dark);
+            background-color: var(--input-bg-dark);
+            color: var(--text-dark);
+        }
+
+        .select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236366f1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        body.dark-mode .select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            min-height: 1.2rem; /* Dla stabilnego układu */
+        }
+
+        /* Button Styles */
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2), 0 2px 4px -1px rgba(99, 102, 241, 0.1);
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.15);
+        }
+
+        .button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2), 0 2px 4px -1px rgba(99, 102, 241, 0.1);
+        }
+
+        .button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
+        }
+
+        .button-icon {
+            margin-right: 0.5rem;
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .button-full {
+            width: 100%;
+        }
+
+        /* Section Styles */
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-light);
+            transition: border-color 0.3s;
+        }
+
+        body.dark-mode .section-header {
+            border-color: var(--border-dark);
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.75rem;
+            stroke: var(--primary);
+            fill: none;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .section-title {
+            color: var(--text-dark);
+        }
+
+        .accent-section {
+            background-color: var(--secondary-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+
+        body.dark-mode .accent-section {
+            background-color: var(--secondary-dark);
+        }
+
+        /* Results Section */
+        .results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results.visible {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .info-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .info-card {
+            background-color: var(--card-light);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark-mode .info-card {
+            background-color: var(--card-dark);
+            border-color: var(--border-dark);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .info-card-title {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            opacity: 0.7;
+            margin: 0 0 0.5rem;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .info-card-title {
+            color: var(--text-dark);
+        }
+
+        .info-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .info-card-value.success {
+            color: var(--success);
+        }
+
+        /* Tabs Styles */
+        .tabs {
+            margin-top: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        body.dark-mode .tab-buttons {
+            border-color: var(--border-dark);
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            opacity: 0.7;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+        }
+
+        body.dark-mode .tab-button {
+            color: var(--text-dark);
+        }
+
+        .tab-button.active {
+            opacity: 1;
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Summary Styles */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .summary-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed var(--border-light);
+            transition: border-color 0.3s;
+        }
+
+        body.dark-mode .summary-item {
+            border-color: var(--border-dark);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--text-light);
+            opacity: 0.8;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .summary-label {
+            color: var(--text-dark);
+        }
+
+        .summary-value {
+            font-weight: 600;
+        }
+
+        .summary-value.success {
+            color: var(--success);
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            transition: box-shadow 0.3s;
+        }
+
+        body.dark-mode .table-container {
+            box-shadow: var(--shadow-dark);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        .table th:last-child {
+            border-top-right-radius: 12px;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            transition: border-color 0.3s;
+            text-align: right;
+        }
+
+        body.dark-mode .table td {
+            border-color: var(--border-dark);
+        }
+
+        .table th {
+            text-align: center;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: var(--secondary-light);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .table tr:nth-child(even) {
+            background-color: var(--secondary-dark);
+        }
+
+        .table tr:hover {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        body.dark-mode .table tr:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+
+        /* Footer Styles */
+        .app-footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            opacity: 0.7;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .app-footer {
+            color: var(--text-dark);
+        }
+
+        .footer-link {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+            border-radius: 5px;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Responsive font */
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .tooltip-icon {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-light);
+            opacity: 0.6;
+            transition: stroke 0.3s, opacity 0.3s;
+        }
+
+        body.dark-mode .tooltip-icon {
+            stroke: var(--text-dark);
+        }
+
+        .tooltip:hover .tooltip-icon {
+            opacity: 1;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--card-light);
+            color: var(--text-light);
+            text-align: center;
+            border-radius: 8px;
+            padding: 0.75rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: var(--shadow-light);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        body.dark-mode .tooltip-text {
+            background-color: var(--card-dark);
+            color: var(--text-dark);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--card-light) transparent transparent transparent;
+            transition: border-color 0.3s;
+        }
+
+        body.dark-mode .tooltip-text::after {
+            border-color: var(--card-dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .pulsing {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+
+        .mt-0 { margin-top: 0; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mb-0 { margin-bottom: 0; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1 class="app-title">Kalkulator kredytowy 2025</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="Przełącz motyw">
+                <svg class="theme-icon" viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </header>
+
+        <main>
+            <!-- Dane podstawowe -->
+            <div class="card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24">
+                        <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></path>
+                    </svg>
+                    <h2 class="section-title">Parametry kredytu</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="label" for="amount">Kwota kredytu (PLN)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="amount" class="input" min="1000" step="1000" value="300000">
+                        </div>
+                        <div id="amount-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label" for="interest">
+                            Oprocentowanie (% rocznie)
+                            <span class="tooltip">
+                                <svg class="tooltip-icon" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <span class="tooltip-text">Podaj oprocentowanie nominalne kredytu, bez dodatkowych opłat i prowizji.</span>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="interest" class="input" min="0.1" step="0.1" value="7.5">
+                        </div>
+                        <div id="interest-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label" for="period">Okres kredytowania (lata)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="period" class="input" min="1" max="35" step="1" value="25">
+                        </div>
+                        <div id="period-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label" for="rateType">Typ rat</label>
+                        <div class="input-wrapper">
+                            <select id="rateType" class="select">
+                                <option value="equal">Raty równe (annuitetowe)</option>
+                                <option value="decreasing">Raty malejące</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nadpłaty -->
+            <div class="card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24">
+                        <path d="M12 8V2l-4 4-4-4v6h8zm-4 8H2v10h6V16zm8-8h-6v10h6V8zm2 8v6h-8v-6h8zm4-8v10h-6V8h6z"></path>
+                    </svg>
+                    <h2 class="section-title">Opcje nadpłat</h2>
+                </div>
+
+                <div class="accent-section">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="label" for="extraPayment">Miesięczna nadpłata (PLN)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="extraPayment" class="input" min="0" step="100" value="500">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label" for="extraPaymentEffect">Skutek nadpłaty</label>
+                            <div class="input-wrapper">
+                                <select id="extraPaymentEffect" class="select">
+                                    <option value="shortenPeriod">Skrócenie okresu kredytowania</option>
+                                    <option value="decreaseInstallment">Zmniejszenie raty</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="label" for="extraPaymentStrategy">Strategia nadpłat</label>
+                        <div class="input-wrapper">
+                            <select id="extraPaymentStrategy" class="select">
+                                <option value="fixed">Stała kwota nadpłaty</option>
+                                <option value="increasing">Zwiększająca się nadpłata o różnicę w racie</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="calculate" class="button button-full mt-8">
+                    <svg class="button-icon" viewBox="0 0 24 24">
+                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                        <line x1="8" y1="6" x2="16" y2="6"></line>
+                        <line x1="8" y1="10" x2="16" y2="10"></line>
+                        <line x1="8" y1="14" x2="16" y2="14"></line>
+                        <line x1="8" y1="18" x2="16" y2="18"></line>
+                    </svg>
+                    Oblicz symulację kredytu
+                </button>
+            </div>
+
+            <!-- MOVED: Wyniki zostały przeniesione na koniec strony -->
+            <div id="results" class="results">
+                <!-- Karty informacyjne -->
+                <div class="info-grid">
+                    <div class="info-card">
+                        <p class="info-card-title">Rata początkowa</p>
+                        <p class="info-card-value" id="info-installment">-</p>
+                    </div>
+                    <div class="info-card">
+                        <p class="info-card-title">Całkowity koszt odsetek</p>
+                        <p class="info-card-value" id="info-total-interest">-</p>
+                    </div>
+                    <div class="info-card">
+                        <p class="info-card-title">Czas spłaty</p>
+                        <p class="info-card-value" id="info-time">-</p>
+                    </div>
+                    <div class="info-card">
+                        <p class="info-card-title">Oszczędność z nadpłat</p>
+                        <p class="info-card-value success" id="info-savings">-</p>
+                    </div>
+
+                </div>
+
+                <!-- Zakładki -->
+                <div class="tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="summary">
+                            <svg class="tab-icon" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
+                            Podsumowanie
+                        </button>
+                        <button class="tab-button" data-tab="schedule">
+                            <svg class="tab-icon" viewBox="0 0 24 24">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                            Harmonogram spłat
+                        </button>
+                    </div>
+
+                    <!-- Zakładka podsumowania -->
+                    <div id="summary" class="tab-content active">
+                        <div class="card">
+                            <div class="summary-grid">
+                                <div>
+                                    <h3 class="card-title">Parametry kredytu</h3>
+                                    <ul class="summary-list">
+                                        <li class="summary-item">
+                                            <span class="summary-label">Kwota kredytu:</span>
+                                            <span class="summary-value" id="summary-amount">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Oprocentowanie:</span>
+                                            <span class="summary-value" id="summary-interest">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Okres kredytowania:</span>
+                                            <span class="summary-value" id="summary-period">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Typ rat:</span>
+                                            <span class="summary-value" id="summary-type">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Wysokość pierwszej raty:</span>
+                                            <span class="summary-value" id="summary-first-installment">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Całkowity koszt odsetek:</span>
+                                            <span class="summary-value" id="summary-total-cost">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Całkowita kwota do spłaty:</span>
+                                            <span class="summary-value" id="summary-total-amount">-</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div id="extra-payment-summary">
+                                    <h3 class="card-title">Wpływ nadpłat</h3>
+                                    <ul class="summary-list">
+                                        <li class="summary-item">
+                                            <span class="summary-label">Miesięczna nadpłata:</span>
+                                            <span class="summary-value" id="summary-extra-payment">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Skutek nadpłaty:</span>
+                                            <span class="summary-value" id="summary-extra-effect">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Strategia nadpłat:</span>
+                                            <span class="summary-value" id="summary-extra-strategy">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Nowy okres kredytowania:</span>
+                                            <span class="summary-value" id="summary-new-period">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Oszczędność na odsetkach:</span>
+                                            <span class="summary-value success" id="summary-interest-saved">-</span>
+                                        </li>
+                                        <li class="summary-item">
+                                            <span class="summary-label">Skrócenie kredytu o:</span>
+                                            <span class="summary-value" id="summary-time-saved">-</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zakładka harmonogramu -->
+                    <div id="schedule" class="tab-content">
+                        <div class="card">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nr</th>
+                                            <th>Rata</th>
+                                            <th>Kapitał</th>
+                                            <th>Odsetki</th>
+                                            <th>Nadpłata</th>
+                                            <th>Pozostały dług</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="schedule-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>Kalkulator kredytowy 2025 | Wszystkie obliczenia mają charakter poglądowy</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Przełączanie motywu
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                
+                // Zapisz preferencję w localStorage
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = `
+                        <svg class="theme-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    `;
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = `
+                        <svg class="theme-icon" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    `;
+                }
+            });
+            
+            // Wczytaj preferowany motyw z localStorage
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = `
+                    <svg class="theme-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                `;
+            }
+            
+            // Przełączanie zakładek
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Formatowanie liczb
+            function formatNumber(number) {
+                return number.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+            
+            // Walidacja
+            function validateForm() {
+                let isValid = true;
+                const amount = parseFloat(document.getElementById('amount').value);
+                const interest = parseFloat(document.getElementById('interest').value);
+                const period = parseInt(document.getElementById('period').value);
+                const amountError = document.getElementById('amount-error');
+                const interestError = document.getElementById('interest-error');
+                const periodError = document.getElementById('period-error');
+                
+                // Resetuj błędy
+                amountError.textContent = '';
+                interestError.textContent = '';
+                periodError.textContent = '';
+                
+                if (isNaN(amount) || amount <= 0) {
+                    amountError.textContent = 'Podaj prawidłową kwotę kredytu';
+                    isValid = false;
+                }
+                
+                if (isNaN(interest) || interest <= 0) {
+                    interestError.textContent = 'Podaj prawidłowe oprocentowanie';
+                    isValid = false;
+                }
+                
+                if (isNaN(period) || period <= 0 || period > 35) {
+                    periodError.textContent = 'Podaj prawidłowy okres (1-35 lat)';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            // Obliczanie rat i harmonogramu
+            function calculateLoan() {
+                if (!validateForm()) return;
+                
+                // Pokaż animację ładowania
+                document.getElementById('calculate').classList.add('pulsing');
+                
+                // Opóźnienie dla lepszego efektu UI
+                setTimeout(() => {
+                    const amount = parseFloat(document.getElementById('amount').value);
+                    const annualInterest = parseFloat(document.getElementById('interest').value);
+                    const years = parseInt(document.getElementById('period').value);
+                    const months = years * 12;
+                    const monthlyInterest = annualInterest / 12 / 100;
+                    const rateType = document.getElementById('rateType').value;
+                    const extraPayment = parseFloat(document.getElementById('extraPayment').value) || 0;
+                    const extraPaymentEffect = document.getElementById('extraPaymentEffect').value;
+                    const extraPaymentStrategy = document.getElementById('extraPaymentStrategy').value;
+                    
+                    let remainingBalance = amount;
+                    let installment = 0;
+                    let firstInstallment = 0;
+                    let totalInterest = 0;
+                    let totalInterestWithoutExtra = 0;
+                    let monthCount = 0;
+                    let cumulativeExtraPayment = 0;
+                    let currentExtraPayment = extraPayment;
+                    let initialInstallment = 0;
+                    let schedule = [];
+                    
+                    // Obliczanie początkowej raty
+                    if (rateType === 'equal') {
+                        // Raty równe (annuitetowe)
+                        installment = amount * (monthlyInterest * Math.pow(1 + monthlyInterest, months)) / (Math.pow(1 + monthlyInterest, months) - 1);
+                        initialInstallment = installment;
+                    } else {
+                        // Raty malejące
+                        const principal = amount / months;
+                        const interest = remainingBalance * monthlyInterest;
+                        installment = principal + interest;
+                        initialInstallment = installment;
+                    }
+                    
+                    firstInstallment = installment;
+                    
+                    // Obliczanie kosztu kredytu bez nadpłat
+                    if (rateType === 'equal') {
+                        totalInterestWithoutExtra = (installment * months) - amount;
+                    } else {
+                        // Dla rat malejących - symulacja bez nadpłat
+                        let tempRemainingBalance = amount;
+                        for (let i = 1; i <= months; i++) {
+                            const principal = amount / months;
+                            const interest = tempRemainingBalance * monthlyInterest;
+                            totalInterestWithoutExtra += interest;
+                            tempRemainingBalance -= principal;
+                        }
+                    }
+                    
+                    // Symulacja z nadpłatami
+                    while (remainingBalance > 0 && monthCount < 1000) { // Zabezpieczenie przed nieskończoną pętlą
+                        monthCount++;
+                        let interest = remainingBalance * monthlyInterest;
+                        let principal = 0;
+                        
+                        if (rateType === 'equal') {
+                            if (extraPaymentEffect === 'decreaseInstallment' && monthCount > 1) {
+                                // Przeliczanie raty po nadpłacie, jeśli wybrano zmniejszenie raty
+                                installment = remainingBalance * (monthlyInterest * Math.pow(1 + monthlyInterest, months - monthCount + 1)) / 
+                                    (Math.pow(1 + monthlyInterest, months - monthCount + 1) - 1);
+                            }
+                            principal = installment - interest;
+                        } else {
+                            // Raty malejące
+                            principal = amount / months;
+                            if (extraPaymentEffect === 'decreaseInstallment' && monthCount > 1) {
+                                principal = remainingBalance / (months - monthCount + 1);
+                            }
+                            installment = principal + interest;
+                        }
+                        
+                        // Obsługa różnych strategii nadpłat
+                        if (extraPaymentStrategy === 'increasing' && monthCount > 1 && extraPaymentEffect === 'decreaseInstallment') {
+                            // Zwiększanie nadpłaty o różnicę między pierwotną ratą a aktualną
+                            const difference = initialInstallment - installment;
+                            currentExtraPayment = extraPayment + difference;
+                        } else {
+                            currentExtraPayment = extraPayment;
+                        }
+                        
+                        totalInterest += interest;
+                        
+                        if (principal + currentExtraPayment >= remainingBalance) {
+                            // Ostatnia rata obejmuje całe pozostałe saldo
+                            currentExtraPayment = 0;
+                            principal = remainingBalance;
+                            installment = principal + interest;
+                        }
+                        
+                        remainingBalance -= (principal + currentExtraPayment);
+                        cumulativeExtraPayment += currentExtraPayment;
+                        
+                        schedule.push({
+                            month: monthCount,
+                            installment: installment,
+                            principal: principal,
+                            interest: interest,
+                            extraPayment: currentExtraPayment,
+                            remainingBalance: Math.max(0, remainingBalance)
+                        });
+                        
+                        if (remainingBalance <= 0) {
+                            break;
+                        }
+                    }
+                    
+                    // Wyświetlanie podsumowania
+                    document.getElementById('summary-amount').textContent = formatNumber(amount) + ' PLN';
+                    document.getElementById('summary-interest').textContent = annualInterest.toFixed(2) + '%';
+                    document.getElementById('summary-period').textContent = years + ' lat (' + months + ' miesięcy)';
+                    document.getElementById('summary-type').textContent = rateType === 'equal' ? 'Równe (annuitetowe)' : 'Malejące';
+                    document.getElementById('summary-first-installment').textContent = formatNumber(firstInstallment) + ' PLN';
+                    document.getElementById('summary-total-cost').textContent = formatNumber(totalInterestWithoutExtra) + ' PLN';
+                    document.getElementById('summary-total-amount').textContent = formatNumber(amount + totalInterestWithoutExtra) + ' PLN';
+                    
+                    // Aktualizacja kart informacyjnych
+                    document.getElementById('info-installment').textContent = formatNumber(firstInstallment) + ' PLN';
+                    document.getElementById('info-total-interest').textContent = formatNumber(totalInterestWithoutExtra) + ' PLN';
+                    document.getElementById('info-time').textContent = years + ' lat';
+                    
+                    if (extraPayment > 0) {
+                        document.getElementById('extra-payment-summary').style.display = 'block';
+                        document.getElementById('summary-extra-payment').textContent = formatNumber(extraPayment) + ' PLN';
+                        document.getElementById('summary-extra-effect').textContent = 
+                            extraPaymentEffect === 'shortenPeriod' ? 'Skrócenie okresu kredytowania' : 'Zmniejszenie raty';
+                        document.getElementById('summary-extra-strategy').textContent = 
+                            extraPaymentStrategy === 'fixed' ? 'Stała kwota nadpłaty' : 'Zwiększająca się nadpłata';
+                        document.getElementById('summary-new-period').textContent = Math.floor(monthCount / 12) + ' lat ' + (monthCount % 12) + ' mies. (' + monthCount + ' mies.)';
+                        document.getElementById('summary-interest-saved').textContent = formatNumber(totalInterestWithoutExtra - totalInterest) + ' PLN';
+                        document.getElementById('summary-time-saved').textContent = (months - monthCount) + ' miesięcy';
+                        
+                        // Aktualizacja karty oszczędności
+                        document.getElementById('info-savings').textContent = formatNumber(totalInterestWithoutExtra - totalInterest) + ' PLN';
+                        document.getElementById('info-time').textContent = Math.floor(monthCount / 12) + ' lat ' + (monthCount % 12) + ' mies.';
+                    } else {
+                        document.getElementById('extra-payment-summary').style.display = 'none';
+                        document.getElementById('info-savings').textContent = '0 PLN';
+                    }
+                    
+                    // Wypełnianie harmonogramu
+                    const scheduleBody = document.getElementById('schedule-body');
+                    scheduleBody.innerHTML = '';
+                    
+                    schedule.forEach(entry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${entry.month}</td>
+                            <td>${formatNumber(entry.installment)} PLN</td>
+                            <td>${formatNumber(entry.principal)} PLN</td>
+                            <td>${formatNumber(entry.interest)} PLN</td>
+                            <td>${formatNumber(entry.extraPayment)} PLN</td>
+                            <td>${formatNumber(entry.remainingBalance)} PLN</td>
+                        `;
+                        scheduleBody.appendChild(row);
+                    });
+                    
+                    // Wyłącz animację ładowania i pokaż wyniki
+                    document.getElementById('calculate').classList.remove('pulsing');
+                    document.getElementById('results').classList.add('visible');
+                    
+                    // Płynne przewijanie do wyników
+                    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                }, 500); // Krótkie opóźnienie dla lepszego efektu ładowania
+            }
+            
+            // Dodanie nasłuchiwania dla przycisku
+            document.getElementById('calculate').addEventListener('click', calculateLoan);
+            
+            // Efekty animacji przy najechaniu na pola
+            document.querySelectorAll('.input, .select').forEach(input => {
+                const wrapper = input.parentElement;
+                
+                input.addEventListener('focus', () => {
+                    wrapper.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', () => {
+                    wrapper.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

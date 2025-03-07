@@ -1230,7 +1230,7 @@
                     // Aktualizacja kart informacyjnych
                     document.getElementById('info-installment').textContent = formatNumber(firstInstallment) + ' PLN';
                     document.getElementById('info-total-interest').textContent = formatNumber(totalInterestWithoutExtra) + ' PLN';
-                    document.getElementById('info-time').textContent = months + ' miesięcy';
+                    document.getElementById('info-time').textContent = Math.floor(months / 12) + ' lat ' + (months % 12) + ' mies. (' + months + ' mies.)';
                     
                     if (extraPayment > 0) {
                         document.getElementById('extra-payment-summary').style.display = 'block';
